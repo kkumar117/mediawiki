@@ -28,7 +28,7 @@ docker push 683103604691.dkr.ecr.ap-south-1.amazonaws.com/wiki:$IMAGE_TAG
 cd ../
 
 #######For new deployment#################
-helm install wiki wiki/
+#helm install wiki wiki/
 
 ###########For upgrading helm release############
-#helm upgrade wiki wiki/ --set=deployment.image.tag=$IMAGE_TAG -n $ENV
+helm upgrade wiki wiki/ --set=deployment.image.tag=$IMAGE_TAG -n $ENV
