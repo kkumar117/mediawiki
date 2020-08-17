@@ -1,0 +1,54 @@
+# Default values for wiki.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+namespace: default
+
+deployment:
+  name: wiki
+  replicaCount: 1
+  minReadySeconds: 60
+  image:
+    repo: 683103604691.dkr.ecr.ap-south-1.amazonaws.com/wiki
+    tag: '1.8'
+    pullPolicy: Always
+  port: 80
+  shutdownTime: 60
+  volumeMounts:
+    name: wiki-vol
+    mountPath: /var/www/html/images
+
+service:
+  name: wiki-service
+  portName: apache
+  port: 80
+  type: NodePort
+  protocol: TCP
+
+configMap:
+  name: wiki-config
+  appLabel: wiki
+  dbHost: database-1.cj1ahnxn7jkv.ap-south-1.rds.amazonaws.com
+  wikiDb: mediawiki
+  siteName: WikiExample
+  defaultSkin: timeless
+  server: http://wiki.example.com
+
+secrets:
+  name: wiki-secret
+  dbUser: ZGJhZG1pbgo=
+  dbPass: TWVEIWFXaWsxCg==
+
+storageClass:
+  name: efs-sc
+  provisioner: efs.csi.aws.com
+  bindingMode: WaitForFirstConsumer
+
+persistentVolume:
+  name: wiki-efs-pv
+  storage: 10Gi
+  accessModes: ReadWriteOnce
+  volumeHandle: fs-cb49d41a
+
+persistentVolumeClaim:
+  name: wiki-efs-claim

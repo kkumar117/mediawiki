@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.deployment.name }}
+  name: {{ .Values.deployment.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+    spec:
+      containers:
+      - env:
+        - name: MEDIAWIKI_SERVER
+          valueFrom:
+            configMapKeyRef:
+              key: MEDIAWIKI_SERVER
+              name: {{ .Values.configMap.name }}
+        - name: MEDIAWIKI_SITENAME
+          valueFrom:
+            configMapKeyRef:
+              key: MEDIAWIKI_SITENAME
+              name: {{ .Values.configMap.name }}
+        - name: MEDIAWIKI_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: MEDIAWIKI_DB_HOST
+              name: {{ .Values.configMap.name }}
+        - name: MEDIAWIKI_DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: MEDIAWIKI_DB_USER
+              name: {{ .Values.secrets.name }}
+        - name: MEDIAWIKI_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MEDIAWIKI_DB_PASSWORD
+              name: {{ .Values.secrets.name }}
+        - name: MEDIAWIKI_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: MEDIAWIKI_DB_NAME
+              name: {{ .Values.configMap.name }}
+        - name: MEDIAWIKI_DEFAULT_SKIN
+          valueFrom:
+            configMapKeyRef:
+              key: MEDIAWIKI_DEFAULT_SKIN
+              name: {{ .Values.configMap.name }}
+        image: {{ .Values.deployment.image.repo }}:{{ .Values.deployment.image.tag }}
+        imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+        name: {{ .Values.deployment.name }}
+        ports:
+        - containerPort: {{ .Values.deployment.port }}
+          protocol: TCP
+        volumeMounts:
+        - name: wiki-persistent-storage
+          mountPath: {{ .Values.deployment.volumeMounts.mountPath }}
+      volumes:
+        - name: wiki-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistentVolumeClaim.name }}

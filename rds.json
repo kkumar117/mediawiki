@@ -1,0 +1,282 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "AWS-RDS (MYSQL) setup",
+	"Parameters": {
+		"VpcId": {
+			"Description": "Select your VPC Id.",
+			"Type": "AWS::EC2::VPC::Id",
+			"Default": ""
+		},
+		"SubnetId1": {
+			"Description": "Select your Subnet Id.",
+			"Type": "AWS::EC2::Subnet::Id",
+			"Default": ""
+		},
+		"SubnetId2": {
+			"Description": "Select your Subnet Id.",
+			"Type": "AWS::EC2::Subnet::Id",
+			"Default": ""
+		},
+		"AllocatedStorage": {
+			"Description": "Type Storage.",
+			"Type": "String",
+			"Default": "20",
+			"Description": "Enter number which will be considered in GB, minimum size is 20"
+		},
+		"AllowMajorVersionUpgrade": {
+			"Description": "Allow Major Version Upgrade.",
+			"Type": "String",
+			"AllowedValues": ["True","False"]
+		},
+		"AutoMinorVersionUpgrade": {
+			"Description": "Auto Minor Version Upgrade.",
+			"Type": "String",
+			"AllowedValues": ["True","False"]
+		},
+		"DBInstanceClass": {
+			"Description": "Type DBInstance Class.",
+			"Type": "String",
+			"Default": "db.m5.large"
+		},
+		"Port": {
+			"Description": "Type Port.",
+			"Type": "String",
+			"Default": "3306"
+		},
+		"StorageType": {
+			"Description": "Type Storage Type.",
+			"Type": "String",
+			"Default": "gp2"
+		},
+		"BackupRetentionPeriod": {
+			"Description": "Type Backup Retention Period.",
+			"Type": "String",
+			"Default": "7"
+		},
+		"DBInstanceIdentifier": {
+			"Description": "Type DBInstance Identifier.",
+			"Type": "String",
+			"Default": "wiki"
+		},
+		"MasterUsername": {
+			"Description": "Type Master Username.",
+			"Type": "String",
+			"Default": "dbadmin"
+		},
+		"MasterUserPassword": {
+			"Description": "Type Master User Password.",
+			"Type": "String",
+			"NoEcho": "true"
+		},
+		"PreferredBackupWindow": {
+			"Description": "Type Preferred Backup Window.",
+			"Type": "String",
+			"Default": "19:40-20:10"
+		},
+		"PreferredMaintenanceWindow": {
+			"Description": "Type Preferred Maintenance Window.",
+			"Type": "String",
+			"Default": "sun:20:56-sun:21:26"
+		},
+		"Engine": {
+			"Description": "Type Engine.",
+			"Type": "String",
+			"Default": "MySQL"
+		},
+		"EngineVersion": {
+			"Description": "Type Engine Version.",
+			"Type": "String",
+			"Default": "8.0.19"
+		},
+		"LicenseModel": {
+			"Description": "Type License Model.",
+			"Type": "String",
+			"Default": "general-public-license"
+		},
+		"EngineName": {
+			"Description": "Type Engine Name.",
+			"Type": "String",
+			"Default": "MySQL"
+		},
+		"SecurityGroupDescription": {
+			"Description": "Type Security Group Description",
+			"Type": "String",
+			"Default": "wiki-sg"
+		},
+		"SecurityGroupName": {
+			"Description": "Enter your SecurityGroup Name.",
+			"Type": "String",
+			"Default": "wiki-sg"
+		},
+		"Environment": {
+			"Description": "Enter your environment Name.",
+			"Type": "String",
+			"Default": "test"
+		},
+		"DBSubnetGroupName": {
+			"Description": "Type DB Subnet Group Name",
+			"Type": "String",
+			"Default": "wiki-sg"
+		},
+		"DBSubnetGroupDescription": {
+			"Description": "Type DB Subnet Group Name Description",
+			"Type": "String",
+			"Default": "wiki-sg"
+		},
+		"MultiAZ": {
+			"Description": "Auto Minor Version Upgrade.",
+			"Type": "String",
+			"AllowedValues": ["True","False"]
+		}	
+	},
+	"Resources": {
+		"RDSInstance": {
+			"Type": "AWS::RDS::DBInstance",
+			"Properties": {
+				"AllocatedStorage": {
+					"Ref": "AllocatedStorage"
+				},
+				"AllowMajorVersionUpgrade": {
+					"Ref": "AllowMajorVersionUpgrade"
+				},
+				"AutoMinorVersionUpgrade": {
+					"Ref": "AutoMinorVersionUpgrade"
+				},
+				"DBInstanceClass": {
+					"Ref": "DBInstanceClass"
+				},
+				"Port": {
+					"Ref": "Port"
+				},
+				"StorageType": {
+					"Ref": "StorageType"
+				},
+				"BackupRetentionPeriod": {
+					"Ref": "BackupRetentionPeriod"
+				},
+				"DBInstanceIdentifier": {
+					"Ref": "DBInstanceIdentifier"
+				},
+				"MasterUsername": {
+					"Ref": "MasterUsername"
+				},
+				"MasterUserPassword": {
+					"Ref": "MasterUserPassword"
+				},
+				"PreferredBackupWindow": {
+					"Ref": "PreferredBackupWindow"
+				},
+				"PreferredMaintenanceWindow": {
+					"Ref": "PreferredMaintenanceWindow"
+				},
+				"Engine": {
+					"Ref": "Engine"
+				},
+				"EngineVersion": {
+					"Ref": "EngineVersion"
+				},
+				"LicenseModel": {
+					"Ref": "LicenseModel"
+				},
+				"DBSubnetGroupName": {
+					"Ref": "dbsubnetgroup01"
+				},
+				"MultiAZ": {
+					"Ref": "MultiAZ"					
+				},
+				"VPCSecurityGroups": [{
+					"Ref": "sgrdssecuirtygroup01"
+				}]
+			}
+		},
+		"dbsubnetgroup01": {
+			"Type": "AWS::RDS::DBSubnetGroup",
+			"Properties": {
+				"DBSubnetGroupName": {
+					"Ref": "DBSubnetGroupName"
+				},
+				"DBSubnetGroupDescription": {
+					"Ref": "DBSubnetGroupDescription"
+				},
+				"SubnetIds": [{
+						"Ref": "SubnetId1"
+					},
+					{
+						"Ref": "SubnetId2"
+					}
+				]
+			}
+		},
+		"sgrdssecuirtygroup01": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": {
+					"Ref": "SecurityGroupDescription"
+				},
+				"GroupName": {
+					"Ref": "SecurityGroupDescription"
+				},
+				"VpcId": {
+					"Ref": "VpcId"
+				},
+					"SecurityGroupIngress": [{
+						"IpProtocol": "tcp",
+						"FromPort": "3306",
+						"ToPort": "3306",
+						"CidrIp": "172.20.80.0/21"
+					}
+				],
+				"SecurityGroupEgress": [{
+					"IpProtocol": "-1",
+					"CidrIp": "0.0.0.0/0"
+				}],
+				"Tags": [
+					{
+						"Key": "environment",
+						"Value": {
+							"Ref": "Environment"
+						}
+					}
+				]
+			}
+		}
+	},
+	"Outputs": {
+		"RDSEndpoint": {
+			"Description": "RDS endpoint",
+			"Value": {
+				"Fn::GetAtt": ["RDSInstance", "Endpoint.Address"]
+			}
+		},
+		"RDSName": {
+			"Value": {
+				"Ref": "RDSInstance"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-RDSInstance"
+				}
+			}
+		},
+		"DBSubnetGroup": {
+			"Value": {
+				"Ref": "dbsubnetgroup01"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-dbsubnetgroup01"
+				}
+			}
+		},
+		"DBSecurityGroup": {
+			"Value": {
+				"Ref": "sgrdssecuirtygroup01"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-sgrdssecuirtygroup01"
+				}
+			}
+		}
+	}
+}
