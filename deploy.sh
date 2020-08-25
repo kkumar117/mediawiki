@@ -8,14 +8,13 @@ echo "Image tag-"$IMAGE_TAG
 echo "NameSpace-"$ENV
 
 #clone helm charts from repo
-git clone https://github.com/kkumar117/mediawiki.git
+#git clone https://github.com/kkumar117/mediawiki.git
 #updating kubeconfig context
-kubectl config use-context arn:aws:eks:ap-south-1:683103604691:cluster/wiki
+kubectl config use-context arn:aws:eks:ap-south-1:683103604691:cluster/train
 #verify namespace exists
 kubectl get namespace $ENV
 #deploy on kubernetes using helm
-ls mediawiki/
-cd mediawiki/code/
+cd code/
 
 #Building dockerfile
 docker build -t 683103604691.dkr.ecr.ap-south-1.amazonaws.com/wiki:$IMAGE_TAG .

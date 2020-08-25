@@ -10,5 +10,6 @@ spec:
   ports:
     - name: {{ .Values.service.portName }}
       protocol: {{ .Values.service.protocol }}
+      nodePort: {{.Values.service.nodeport}}
       port:  {{ .Values.service.port }}
       targetPort: {{ .Values.deployment.port }}

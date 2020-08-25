@@ -12,7 +12,7 @@
 
 # Protect against web entry
 if ( !defined( 'MEDIAWIKI' ) ) {
-	exit;
+        exit;
 }
 
 
@@ -29,7 +29,7 @@ $wgSitename = getenv('MEDIAWIKI_SITENAME');
 $wgScriptPath = "";
 
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = "http://13.127.7.226:8081";
+$wgServer = getenv('MEDIAWIKI_SERVER');
 
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
@@ -52,10 +52,10 @@ $wgEmailAuthentication = true;
 
 ## Database settings
 $wgDBtype = "mysql";
-$wgDBserver = getenv('MEDIAWIKI_DB_HOST');
-$wgDBname = getenv('MEDIAWIKI_DB_NAME');
-$wgDBuser = getenv('MEDIAWIKI_DB_USER');
-$wgDBpassword = getenv('MEDIAWIKI_DB_PASSWORD');;
+$wgDBserver = "database-1.cj1ahnxn7jkv.ap-south-1.rds.amazonaws.com";
+$wgDBname = "mediawiki";
+$wgDBuser = "dbadmin";
+$wgDBpassword = "MeD!aWik1";
 
 # MySQL specific settings
 $wgDBprefix = "";

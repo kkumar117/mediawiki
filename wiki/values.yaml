@@ -10,7 +10,7 @@ deployment:
   minReadySeconds: 60
   image:
     repo: 683103604691.dkr.ecr.ap-south-1.amazonaws.com/wiki
-    tag: '1.8'
+    tag: '2.0'
     pullPolicy: Always
   port: 80
   shutdownTime: 60
@@ -24,6 +24,7 @@ service:
   port: 80
   type: NodePort
   protocol: TCP
+  nodeport: 30220
 
 configMap:
   name: wiki-config
@@ -32,7 +33,7 @@ configMap:
   wikiDb: mediawiki
   siteName: WikiExample
   defaultSkin: timeless
-  server: http://wiki.example.com
+  server: http://wiki.example.com:30220
 
 secrets:
   name: wiki-secret
@@ -48,7 +49,7 @@ persistentVolume:
   name: wiki-efs-pv
   storage: 10Gi
   accessModes: ReadWriteOnce
-  volumeHandle: fs-cb49d41a
+  volumeHandle: fs-b58b1464
 
 persistentVolumeClaim:
   name: wiki-efs-claim
